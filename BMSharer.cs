@@ -75,8 +75,9 @@ namespace FB.BusinessManagerSharer
                 response = _restClient.Execute(request);
                 json = (JObject)JsonConvert.DeserializeObject(response.Content);
                 ErrorChecker.HasErrorsInResponse(json, true);
-                Console.WriteLine("Ссылка получена:"+json["invite_link"]);
-                links.Add(json["invite_link"].ToString());
+                var inviteLink=json["data"][0]["invite_link"].ToString();
+                Console.WriteLine("Ссылка получена:"+inviteLink);
+                links.Add(inviteLink);
             }
             Console.WriteLine("Используйте эти ссылки для добавления себе БМов:");
             links.ForEach(Console.WriteLine);
