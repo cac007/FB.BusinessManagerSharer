@@ -22,7 +22,7 @@ namespace FB.BusinessManagerSharer
 
         public void CreateAndShare(int cnt)
         {
-            var links=new List<string>();
+            var links = new List<string>();
             for (int i = 0; i < cnt; i++)
             {
                 Console.Write("Введите название нового fan page:");
@@ -54,10 +54,7 @@ namespace FB.BusinessManagerSharer
                 Console.WriteLine("БМ создан!");
 
                 Console.WriteLine("Шарим БМ...");
-                const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                var r = new Random();
-                var email = new string(Enumerable.Repeat(chars, 8)
-                  .Select(s => s[r.Next(s.Length)]).ToArray()) + "@gmail.com";
+                var email = GetRandomEmail();
 
                 request = new RestRequest($"{bmId}/business_users", Method.POST);
                 request.AddParameter("access_token", _amAccessToken);
@@ -75,8 +72,8 @@ namespace FB.BusinessManagerSharer
                 response = _restClient.Execute(request);
                 json = (JObject)JsonConvert.DeserializeObject(response.Content);
                 ErrorChecker.HasErrorsInResponse(json, true);
-                var inviteLink=json["data"][0]["invite_link"].ToString();
-                Console.WriteLine("Ссылка получена:"+inviteLink);
+                var inviteLink = json["data"][0]["invite_link"].ToString();
+                Console.WriteLine("Ссылка получена:" + inviteLink);
                 links.Add(inviteLink);
             }
             Console.WriteLine("Используйте эти ссылки для добавления себе БМов:");
@@ -84,6 +81,29 @@ namespace FB.BusinessManagerSharer
             Console.WriteLine("Все задания выполнены, лейте в плюс, господа!");
             Console.WriteLine("Нажмите Enter для завершения работы");
             Console.ReadLine();
+        }
+
+        private string GetRandomEmail()
+        {
+            string email=string.Empty;
+            var isValidEmail=false;
+            while (!isValidEmail)
+            {
+                try
+                {
+                    const string chars = "abcdefghijklmnopqrstuvwxyz";
+                    var r = new Random();
+                    email = new string(Enumerable.Repeat(chars, 8)
+                      .Select(s => s[r.Next(s.Length)]).ToArray()) + "@gmail.com";
+                    var addr = new System.Net.Mail.MailAddress(email);
+                    isValidEmail=true;
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+            return email;
         }
     }
 }
