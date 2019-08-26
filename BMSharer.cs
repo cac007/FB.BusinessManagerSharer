@@ -72,6 +72,7 @@ namespace FB.BusinessManagerSharer
                 response = _restClient.Execute(request);
                 json = (JObject)JsonConvert.DeserializeObject(response.Content);
                 ErrorChecker.HasErrorsInResponse(json, true);
+				Console.WriteLine($"Инфа для отладки: {json}");
                 var inviteLink = json["data"][0]["invite_link"].ToString();
                 Console.WriteLine("Ссылка получена:" + inviteLink);
                 links.Add(inviteLink);
