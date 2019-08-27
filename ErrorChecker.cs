@@ -7,16 +7,13 @@ namespace FB.BusinessManagerSharer
     {
         public static bool HasErrorsInResponse(JObject json,bool throwException=false)
         {
-            var error = json["error"]?["message"].ToString();
-            if (!string.IsNullOrEmpty(error))
-            {
-                var msg=$"Ошибка при попытке выполнить запрос:{json["error"]}!";
-                if (throwException)
-                    throw new Exception(msg);
-                Console.WriteLine(msg);
-                return true;
-            }
-            return false;
+			if (json["error"]==null) return false;
+			
+            var msg=$"Ошибка при попытке выполнить запрос:{json["error"]}!";
+            if (throwException)
+                throw new Exception(msg);
+            Console.WriteLine(msg);
+            return true;
         }
 
         public static bool VideoIsNotReadyResponse(JObject json)
